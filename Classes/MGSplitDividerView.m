@@ -23,6 +23,11 @@
 		self.userInteractionEnabled = NO;
 		self.allowsDragging = NO;
 		self.contentMode = UIViewContentModeRedraw;
+        
+        UITapGestureRecognizer *recognizer =  [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(wasDoubleTapped)];
+        recognizer.numberOfTapsRequired = 2;
+        [self addGestureRecognizer:recognizer];
+        [recognizer release];
 	}
 	return self;
 }
@@ -195,6 +200,10 @@
 	}
 }
 
+- (void)wasDoubleTapped {
+    if (splitViewController!=nil && [splitViewController respondsToSelector:@selector(toggleSplitOrientation:)])
+        [splitViewController toggleSplitOrientation:self];
+}
 
 #pragma mark -
 #pragma mark Accessors and properties

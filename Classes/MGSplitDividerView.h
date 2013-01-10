@@ -18,5 +18,6 @@
 @property (nonatomic, assign) BOOL allowsDragging;
 
 - (void)drawGripThumbInRect:(CGRect)rect;
+- (void)wasDoubleTapped;
 
 @end
