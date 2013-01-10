@@ -666,6 +666,11 @@
 		[UIView setAnimationDelegate:self];
 		[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
 	}
+    
+    // Prevent divider be beyond screen
+    if (!self.isVertical && self.splitPosition > self.view.frame.size.width - MG_MIN_VIEW_WIDTH-self.splitWidth)
+        [self setSplitPosition:self.view.frame.origin.y + self.view.frame.size.width - MG_MIN_VIEW_WIDTH-self.splitWidth animated:NO];
+    
 	self.vertical = (!self.vertical);
 	if (showingMaster) {
 		[UIView commitAnimations];
