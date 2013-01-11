@@ -9,11 +9,12 @@
 #import "RootViewController.h"
 #import "DetailViewController.h"
 
+#define kFontSize 14.0
 
 @implementation RootViewController
 
 
-@synthesize detailViewController;
+@synthesize array, detailViewController;
 
 
 #pragma mark -
@@ -23,6 +24,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.array = [NSArray arrayWithObjects:@"http://github.com/valeriyvan/MGSplitViewController", @"http://mattgemmell.com", @"http://opencv.org", @"http://www.odesk.com", @"http://yandex.com", @"http://yahoo.com", @"http://cnn.com", @"http://times.com", @"http://ebay.com", @"http://paypal.com", @"http://apple.com", @"http://ibm.com", @"http://microsoft.com", @"http://hp.com", @"http://oracle.com", @"http://w7software.com", @"http://oreilly.com", @"http://amazon.com", @"http://ask.com", @"http://www.raspberrypi.org", @"http://wikipedia.org", @"http://developer.apple.com", @"http://youdo.com", @"http://www.thelongestlistofthelongeststuffatthelongestdomainnameatlonglast.com", @"http://www.llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch.com", @"http://odessa.ua", @"http://icloud.com", @"http://dropbox.com", @"http://sugarsync.com", @"http://twitter.github.com/bootstrap", @"http://ua.vlasenko.net", @"http://www.gismeteo.ua/city/daily/4982", @"http://www.whatismyip.com", @"http://internet.yandex.com", @"http://english.odessa.ua", @"http://admincourt.net", @"http://rada.gov.ua", @"http://tema.ru/travel", nil];
     self.clearsSelectionOnViewWillAppear = NO;
     self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
 }
@@ -64,7 +66,7 @@
 - (NSInteger)tableView:(UITableView *)aTableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 10;
+    return [self.array count];
 }
 
 
@@ -81,10 +83,21 @@
     }
     
     // Configure the cell.
-    cell.textLabel.text = [NSString stringWithFormat:@"Row %d", indexPath.row];
+    cell.textLabel.text = [self.array objectAtIndex:indexPath.row];
+    cell.textLabel.numberOfLines = 0;
+    cell.textLabel.font = [UIFont systemFontOfSize:kFontSize];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     return cell;
 }
 
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *text = [array objectAtIndex:indexPath.row];
+	CGSize constrainedSize = CGSizeMake(tableView.frame.size.width - 80, MAXFLOAT);
+	CGSize sizeOfText = [text sizeWithFont:[UIFont systemFontOfSize:kFontSize] constrainedToSize:constrainedSize];
+	CGFloat defaultHeight =  40;
+	return fmax(sizeOfText.height + 10, defaultHeight);
+}
 
 #pragma mark -
 #pragma mark Table view delegate
@@ -93,7 +106,7 @@
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	// When a row is selected, set the detail view controller's detail item to the item associated with the selected row.
-    detailViewController.detailItem = [NSString stringWithFormat:@"Row %d", indexPath.row];
+    detailViewController.detailItem = [self.array objectAtIndex:indexPath.row];
 }
 
 
@@ -103,6 +116,7 @@
 
 - (void)dealloc
 {
+    [array release];
     [detailViewController release];
     [super dealloc];
 }

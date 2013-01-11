@@ -21,7 +21,7 @@
 @implementation DetailViewController
 
 
-@synthesize toolbar, popoverController, detailItem, detailDescriptionLabel;
+@synthesize toolbar, popoverController, detailItem, detailWebView, activityIndicator;
 
 
 #pragma mark -
@@ -48,7 +48,13 @@
 - (void)configureView
 {
     // Update the user interface for the detail item.
-    detailDescriptionLabel.text = [detailItem description];
+    [detailWebView stopLoading];
+    [activityIndicator stopAnimating];
+    NSString *urlString = [detailItem description];
+    if (urlString) {
+        [detailWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]];
+        [activityIndicator startAnimating];
+    }
 	toggleItem.title = ([splitController isShowingMaster]) ? @"Hide Master" : @"Show Master"; // "I... AM... THE MASTER!" Derek Jacobi. Gave me chills.
 	verticalItem.title = (splitController.vertical) ? @"Horizontal Split" : @"Vertical Split";
 	dividerStyleItem.title = (splitController.dividerStyle == MGSplitViewDividerStyleThin) ? @"Enable Dragging" : @"Disable Dragging";
@@ -184,8 +190,22 @@
     [toolbar release];
     
     [detailItem release];
-    [detailDescriptionLabel release];
+    [detailWebView release];
     [super dealloc];
+}
+
+#pragma mark -
+#pragma mark WebViewDelegate support
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    return YES;
+}
+
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    [activityIndicator stopAnimating];
 }
 
 
